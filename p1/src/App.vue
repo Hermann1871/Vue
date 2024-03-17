@@ -23,8 +23,10 @@ function increment2() {
 
 // 5
 const text = ref('')
-function onInput(e: any) {
-  text.value = e.target.value + "PIPPO"
+function onInput(e: Event) {
+  console.log("Tipo dell'evento:", typeof e) // object
+  console.log("Evento:", e) // object
+  text.value = (e.target as HTMLInputElement).value + "PIPPO"
 }
 
 // 6
@@ -34,6 +36,11 @@ function toggle() {
 }
 
 // 7
+type todoType = {
+  id: number;
+  text: string;
+};
+
 let id = 0
 
 const newTodo = ref('')
@@ -48,7 +55,7 @@ function addTodo() {
   newTodo.value = ''
 }
 
-function removeTodo(todo: any) {
+function removeTodo(todo: todoType) {
   // todos.value = todos.value.filter((t) => t.id !== todo.id) // non necessario specificare l'id
   todos.value = todos.value.filter((t) => t !== todo)
 }
@@ -76,7 +83,7 @@ function addTodo2() {
   newTodo2.value = ''
 }
 
-function removeTodo2(todo: any) {
+function removeTodo2(todo: todoType) {
   todos2.value = todos2.value.filter((t) => t !== todo)
 }
 
