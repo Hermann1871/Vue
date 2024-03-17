@@ -44,20 +44,22 @@ type todoType = {
 let id = 0
 
 const newTodo = ref('')
-const todos = ref([
+const todos: todoType[] = [
   { id: id++, text: 'Learn HTML' },
   { id: id++, text: 'Learn JavaScript' },
   { id: id++, text: 'Learn Vue' }
-])
+]
+
+const todosRef = ref(todos);
 
 function addTodo() {
-  todos.value.push({ id: id++, text: newTodo.value })
+  todosRef.value.push({ id: id++, text: newTodo.value })
   newTodo.value = ''
 }
 
 function removeTodo(todo: todoType) {
   // todos.value = todos.value.filter((t) => t.id !== todo.id) // non necessario specificare l'id
-  todos.value = todos.value.filter((t) => t !== todo)
+  todosRef.value = todosRef.value.filter((t) => t !== todo)
 }
 
 // 8
@@ -134,18 +136,25 @@ const msg = ref('dal padre')
 
 <template>
   <!-- 2 -->
+  <h2>2</h2>
   <h1>{{ message }}</h1>
   <p>Count is: {{ counter.count }}</p>
 
   <!-- 3 -->
+  <h2>3</h2>
+
   <h1 :class="titleClass">Rendimi rosso</h1>
 
   <!-- 4 -->
+  <h2>4</h2>
+
   <p>Count is: {{ count }}</p>
   <button @click="increment">conteggio: {{ count }}</button> <br><br>
   <button @click="increment2">conteggio (counter.count): {{ counter.count }}</button>
 
   <!-- 5 -->
+  <h2>5</h2>
+
   <br><br>
   <!-- senza onInput -->
   <input v-model="text" placeholder="Scrivi qui">
@@ -153,26 +162,28 @@ const msg = ref('dal padre')
   <input :value="text" @input="onInput" placeholder="Type here">
 
   <!-- 6 -->
+  <h2>6</h2>
+
   <br><br>
   <button @click="toggle">toggle</button>
   <h1 v-if="awesome">Vue è fantastico!</h1>
   <h1 v-else>Oh no 😢</h1>
 
   <!-- 7 -->
-  <h3>7</h3>
+  <h2>7</h2>
   <form @submit.prevent="addTodo">
     <input v-model="newTodo">
     <button>Aggiungi un todo</button>
   </form>
   <ul>
-    <li v-for="todo in todos" :key="todo.id">
+    <li v-for="todo in todosRef" :key="todo.id">
       {{ todo.text }}
       <button @click="removeTodo(todo)">X</button>
     </li>
   </ul>
 
   <!-- 8 -->
-  <h3>8</h3>
+  <h2>8</h2>
   <form @submit.prevent="addTodo2">
     <input v-model="newTodo2">
     <button>Aggiungi Todo</button>
@@ -209,7 +220,7 @@ const msg = ref('dal padre')
 
   <!-- 13 -->
   <h2>13</h2>
-  <ChildComp @response="(msg) => childMsg = msg" />
+  <ChildComp @response="(msg: string) => childMsg = msg" />
   <p>{{ childMsg }}</p>
 
   <!-- 14 -->
