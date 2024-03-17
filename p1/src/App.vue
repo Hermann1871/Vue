@@ -2,7 +2,7 @@
  -->
 <script setup lang="ts">
 
-import { computed, onMounted, reactive, ref, watch } from 'vue'
+import { computed, onMounted, reactive, ref, watch, type Ref } from 'vue'
 import ChildComp from "./ChildComp.vue"
 
 // 2
@@ -36,30 +36,29 @@ function toggle() {
 }
 
 // 7
+let id = 0
+
+const newTodo = ref('')
+
 type todoType = {
   id: number;
   text: string;
 };
 
-let id = 0
-
-const newTodo = ref('')
-const todos: todoType[] = [
+const todos: Ref<todoType[]> = ref([
   { id: id++, text: 'Learn HTML' },
   { id: id++, text: 'Learn JavaScript' },
   { id: id++, text: 'Learn Vue' }
-]
-
-const todosRef = ref(todos);
+])
 
 function addTodo() {
-  todosRef.value.push({ id: id++, text: newTodo.value })
+  todos.value.push({ id: id++, text: newTodo.value })
   newTodo.value = ''
 }
 
 function removeTodo(todo: todoType) {
   // todos.value = todos.value.filter((t) => t.id !== todo.id) // non necessario specificare l'id
-  todosRef.value = todosRef.value.filter((t) => t !== todo)
+  todos.value = todos.value.filter((t) => t !== todo)
 }
 
 // 8
@@ -176,7 +175,7 @@ const msg = ref('dal padre')
     <button>Aggiungi un todo</button>
   </form>
   <ul>
-    <li v-for="todo in todosRef" :key="todo.id">
+    <li v-for="todo in todos" :key="todo.id">
       {{ todo.text }}
       <button @click="removeTodo(todo)">X</button>
     </li>
