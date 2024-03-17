@@ -2,7 +2,8 @@
  -->
 <script setup lang="ts">
 
-import { computed, onMounted, reactive, ref } from 'vue'
+import { computed, onMounted, reactive, ref, watch } from 'vue'
+import ChildComp from "./ChildComp.vue"
 
 // 2
 const message = ref('Hello World!')
@@ -89,6 +90,39 @@ onMounted(() => {
   // }
 })
 
+// 10
+const todoId = ref(1)
+const todoData = ref(null)
+
+async function fetchData() {
+  todoData.value = null
+  const res = await fetch(
+    `https://jsonplaceholder.typicode.com/todos/${todoId.value}`
+  )
+  await sleep(2000)
+  todoData.value = await res.json()
+}
+
+// https://www.geeksforgeeks.org/how-to-implement-sleep-function-in-typescript/
+async function sleep(ms: number): Promise<void> {
+  return new Promise(
+    (resolve) => setTimeout(resolve, ms));
+}
+
+fetchData()
+
+watch(todoId, fetchData)
+
+// 12
+const greeting = ref('Ciao dal padre')
+
+// 13
+const childMsg = ref('Ancora nessun messaggio dal figlio')
+
+// 14
+const msg = ref('dal padre')
+
+
 </script>
 
 <template>
@@ -150,6 +184,31 @@ onMounted(() => {
   <!-- 9 -->
   <h2>9</h2>
   <p ref="pElementRef">ciao</p>
+
+  <!-- 10 -->
+  <h2>10</h2>
+  <p>Todo id: {{ todoId }}</p>
+  <button @click="todoId++">Fetch del todo successivo</button>
+  <p v-if="!todoData">Caricamento in corso...</p>
+  <pre v-else>{{ todoData }}</pre>
+
+  <!-- 11 -->
+  <h2>11</h2>
+  <ChildComp />
+
+  <!-- 12 -->
+  <h2>12</h2>
+  <ChildComp :msg="greeting" />
+
+  <!-- 13 -->
+  <h2>13</h2>
+  <ChildComp @response="(msg) => childMsg = msg" />
+  <p>{{ childMsg }}</p>
+
+  <!-- 14 -->
+  <h1>14</h1>
+  <ChildComp>Messaggio (tramite slot): {{ msg }}</ChildComp>
+
 
 
 
